@@ -52,8 +52,9 @@ export default function App(){
     return (
       <button
         className = {className}
-        key={letter}
-        onClick={() => addGuessedLetter(letter)}
+        key = {letter}
+        disabled = {isGameOver}
+        onClick = {() => addGuessedLetter(letter)}
       >
         {letter.toUpperCase()}
       </button>
