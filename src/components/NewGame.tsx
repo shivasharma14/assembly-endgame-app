@@ -1,5 +1,7 @@
-export default function NewGame(){
+export default function NewGame(props:any) {
     return (
-        <button className="new-game">New Game</button>
+        <>
+            {props.isGameOver && <button className="new-game">New Game</button>}
+        </>
     )
 }

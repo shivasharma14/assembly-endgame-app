@@ -5,29 +5,66 @@ import Word from "./components/Word";
 import Keyboard from "./components/Keyboard";
 import NewGame from "./components/NewGame";
 import { useState } from "react";
+import { clsx } from "clsx";
+import { languages } from "./assets/languages";
 
 export default function App(){
 
+  //State values
   const [currentWord, setCurrentWord] = useState("react")
+  const [guessedLetters, setGuessedLetters] = useState([] as string[])
 
-  const letterElements = currentWord.split("").map((letter,index) =>(
-    <span key={index}>{letter.toUpperCase()}</span>
-  ))
+  //Derived values
+  const wrongGuessesArray = guessedLetters.filter(letter => !currentWord.includes(letter))
+  const wrongGuessCount = wrongGuessesArray.length
+  const isGameWon = currentWord.split("").every(letter => guessedLetters.includes(letter))
+  const isGameLost = wrongGuessCount >= languages.length - 1
+  const isGameOver = isGameWon || isGameLost
 
+  //Static values
   const alphabet = "abcdefghijklmnopqrstuvwxyz"
 
-  const keyboardElements = alphabet.split("").map(letter=>(
-    <button key={letter}>{letter.toUpperCase()}</button>
+  const letterElements = currentWord.split("").map((letter,index) =>(
+    <span key={index}>
+      {guessedLetters.includes(letter) ? letter.toUpperCase() : ""}
+    </span>
   ))
+
+  function addGuessedLetter(letter: string)
+  {
+    setGuessedLetters( prevLetters =>
+      prevLetters.includes(letter) ? prevLetters : [...prevLetters, letter]
+    )
+  }
+
+  const keyboardElements = alphabet.split("").map(letter=> {
+    const isGuessed = guessedLetters.includes(letter);
+    const isCorrect = isGuessed && currentWord.includes(letter);
+    const isWrong = isGuessed && !currentWord.includes(letter);
+    const className = clsx({
+      correct: isCorrect,
+      wrong: isWrong,
+    })
+
+    return (
+      <button
+        className = {className}
+        key={letter}
+        onClick={() => addGuessedLetter(letter)}
+      >
+        {letter.toUpperCase()}
+      </button>
+    )
+})
 
   return(
     <main>
       <Header/>
-      <GameStatus/>
-      <LanguageChips/>
+      <GameStatus isGameOver = {isGameOver} isGameWon = {isGameWon} isGameLost = {isGameLost}/>
+      <LanguageChips wrongGuessCount = {wrongGuessCount}/>
       <Word letterElements = {letterElements}/>
       <Keyboard keyboardElements = {keyboardElements}/>
-      <NewGame/>
+      <NewGame isGameOver={isGameOver}/>
     </main>
   )
 }
