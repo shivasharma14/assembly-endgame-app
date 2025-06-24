@@ -20,6 +20,9 @@ export default function App(){
   const isGameWon = currentWord.split("").every(letter => guessedLetters.includes(letter))
   const isGameLost = wrongGuessCount >= languages.length - 1
   const isGameOver = isGameWon || isGameLost
+  const lastGuessedLetter = guessedLetters[guessedLetters.length -1]
+  const isLastGuessIncorrect = lastGuessedLetter && !currentWord.includes(lastGuessedLetter)
+  const languageRemoved = wrongGuessCount > 0 ? languages[wrongGuessCount - 1].name : null //important to handle the wrong guess count as 0 scenario
 
   //Static values
   const alphabet = "abcdefghijklmnopqrstuvwxyz"
@@ -60,7 +63,7 @@ export default function App(){
   return(
     <main>
       <Header/>
-      <GameStatus isGameOver = {isGameOver} isGameWon = {isGameWon} isGameLost = {isGameLost}/>
+      <GameStatus isGameOver = {isGameOver} isGameWon = {isGameWon} isGameLost = {isGameLost} isLastGuessIncorrect = {isLastGuessIncorrect} languageRemoved = {languageRemoved}/>
       <LanguageChips wrongGuessCount = {wrongGuessCount}/>
       <Word letterElements = {letterElements}/>
       <Keyboard keyboardElements = {keyboardElements}/>
