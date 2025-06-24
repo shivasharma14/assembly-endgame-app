@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import { getFarewellText } from "../utils"
+import { getFarewellText } from "../assets/utils"
 
 export default function GameStatus(props:any){
     const gameStatusClass = clsx("game-status", {
@@ -34,7 +34,7 @@ export default function GameStatus(props:any){
     }
 
     return(
-        <section className={gameStatusClass}>
+        <section className = {gameStatusClass} aria-live = "polite" role = "status">
             {renderGameStatus()}
         </section>
     )
